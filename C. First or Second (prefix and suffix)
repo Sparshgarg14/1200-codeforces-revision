@@ -1,0 +1,174 @@
+    import com.sun.security.jgss.GSSUtil;
+
+    import java.io.*;
+    import java.util.*;
+
+
+
+
+    public class Codeforces {
+public static int mod  =1000000;
+
+    //The problems are easy and if I m not going anywhere with some solution, come back, think again from basic facts and logic
+    //    try to see if the process is good when working in reverse(reverse numbers from 1-n) and think of parity
+    //    even first or odd first to print
+    //    try to make generalized cases - aaaa...bbbb...a a a b bb a ..a.. at the end what I need to do ultimately
+    //    question says to solve a problem given three options , a,b,c , try taking c absent and then think can u do it ?, it makes the problem simpler
+    //    u have to take out the min, think like what min to take out that also takes max with it
+    //    when logic doesn't strike you on what to perform and array given  , try to think in terms of array index
+    //    when they want to have condition as true , try and see what is causing it to be false,(what if all chars>k , whole string is the ans)
+    //    chars are between 1-26 only
+    //The Problem statement
+        /*
+
+
+
+         */
+
+
+    //Small observations in the question
+        /*
+
+         */
+
+
+    //Algo that can be claimed
+        /*
+
+         */
+
+
+        public static void main(String[] args) throws IOException {
+            FastReader fr = new FastReader();
+            int t = fr.nextInt();
+            while (t-- > 0) {
+               int n  = fr.nextInt();
+               long arr[] = new long[(int)n];
+               long pref[] = new long[n];
+               long suff[] = new long[n];
+
+                for (int i = 0; i < n; i++) {
+                    arr[i]  = fr.nextLong();
+                }
+                // pref[i] = |a[1]| + ... + |a[i]|
+                for (int i = 1; i < n; i++) {
+                    pref[i] = pref[i - 1] + Math.abs(arr[i]);
+                }
+                // suff[i] = -(a[i+1] + a[i+2] + ...)
+                for(int i=n-2;i>=0;i--) suff[i]=suff[i+1]-arr[i+1];
+                long ans = suff[0];
+                for (int i = 1; i < n; i++) {
+                    ans = Math.max(ans, arr[0] + pref[i-1] +suff[i]);
+
+                }
+                System.out.println(ans);
+
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public static void Swap(int i , int j ){
+            int temp=0;
+            i =j;
+
+        }
+        // Function to compute GCD of two numbers
+        public static long gcd(long a, long b) {
+            while (b != 0) {
+                long temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+
+
+        //  Binary Exponentiation (modular fast power)
+        static long binPow(long a, int b) {
+            long res = 1;
+            while (b > 0) {
+                if ((b & 1) == 1) res = res * a % mod;
+                a = a * a % mod;
+                b >>= 1;
+            }
+            return res;
+        }
+
+        public static class Pair {
+            public int a, b;
+            Pair(int a, int b) {
+                this.a = a;
+                this.b = b;
+            }
+            @Override
+            public String toString() {
+                return a + " -> " + b;
+            }
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
+                Pair that = (Pair) o;
+                return a == that.a && b == that.b;
+            }
+        }
+    }
+
+    class FastReader {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastReader() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    String line = br.readLine();
+                    if (line == null) return null;
+                    st = new StringTokenizer(line);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                if (st.hasMoreTokens()) str = st.nextToken("\n");
+                else str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+    }
