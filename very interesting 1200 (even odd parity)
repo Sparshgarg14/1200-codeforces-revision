@@ -54,7 +54,7 @@ public class Codeforces {
         while(t-- > 0) {
             int  n  =fr.nextInt();
             int arr[] = new int[2*n];
-            int freq[] = new int[10];
+            int freq[] = new int[2*n+1];
             for (int i = 0; i < 2*n; i++) {
                 arr[i] = fr.nextInt();
                 freq[arr[i]]++;
