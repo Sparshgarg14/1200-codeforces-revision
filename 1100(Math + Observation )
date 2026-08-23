@@ -1,0 +1,281 @@
+import com.sun.security.jgss.GSSUtil;
+
+import javax.swing.*;
+import java.io.*;
+import java.util.*;
+
+
+
+//JAI SHREE RAM
+public class Codeforces {
+    public static int mod = 1000000;
+
+    //The problems are easy and if I m not going anywhere with some solution, come back, think again from basic facts and logic
+    //    try to see if the process is good when working in reverse(reverse numbers from 1-n) and think of parity
+    //    even first or odd first to print
+    //    try to make generalized cases - aaaa...bbbb...a a a b bb a ..a.. at the end what I need to do ultimately
+    //    question says to solve a problem given three options , a,b,c , try taking c absent and then think can u do it ?, it makes the problem simpler
+    //    u have to take out the min, think like what min to take out that also takes max with it
+    //    when logic doesn't strike you on what to perform and array given  , try to think in terms of array index
+    //    when they want to have condition as true , try and see what is causing it to be false,(what if all chars>k , whole string is the ans)
+    //    chars are between 1-26 only
+
+
+    //The Problem statement
+    /*
+     I have been given 2 integers a, b , b%k==0, a*k, b/k
+     the greatest possible even value of a+b, if impossible output =-1
+
+
+     */
+
+
+    //Small observations in the question
+    /*
+   a*k , b/k , product remains the same
+  1,8 and 8,1
+  2,4 , 6,3-> 18+1 =19 6+3=9 9+2=11 what is this case where I always get answer =-1 , ans is always odd
+  that case I WILL ALWAYS GET -1 , product can be even , but the sum is always odd
+  if sum is odd then a, b is even , odd
+  what if I start to convert every pair into (1,ab) , then think what can I do ..
+  then that number %4==0 else false ..
+
+
+
+     */
+
+
+    //Algo that can be claimed
+    /*
+
+
+     */
+
+
+    public static void main(String[] args) throws IOException {
+        FastReader fr = new FastReader();
+        int t = fr.nextInt();
+        while (t-- > 0) {
+            long a  = fr.nextLong();
+            long b  = fr.nextLong();
+            long res = a*b;
+
+             if((res+1)%2==0){
+                 System.out.println(res+1);
+                 continue;
+             }
+            if(b%4!=0){
+
+                    if(a%2!=0 || b%2!=0) {
+                        System.out.println(-1);
+
+                        continue;
+                    }
+
+
+
+            }
+
+                 long res1 = (res+1)/2 + 2;
+                 long b1 =1;
+//                 System.out.println(res%4 + " "  + res + " " +  (a+b));
+                 if((b==1 && (a+b)%2!=0)) System.out.println(-1);
+                 else {
+                     System.out.println(res1);
+                 }
+
+
+
+
+
+
+        }
+    }
+          /*
+          1 62
+          1 63
+          1 64
+           */
+
+    public static  int ans=0;
+        public static int dfs(int node , List<List<Integer>>tree){
+        if(tree.get(node).isEmpty()){
+            ans++;
+            return 1;
+        }
+        List<Integer>h  =new ArrayList<>();
+
+        for(int child:tree.get(node)){
+            h.add(dfs(child,tree));
+        }
+        if(h.size()==1){
+            ans++;
+            return h.get(0)+1;
+        }
+        Collections.sort(h);
+        Collections.reverse(h);
+        ans+=h.get(1)+1;
+        return h.get(0)+1;
+
+    }
+
+
+
+
+
+
+
+
+
+    public static void Swap(int i , int j ){
+        int temp=0;
+        i =j;
+
+    }
+    // Function to compute GCD of two numbers
+    public static int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+
+
+    //  Binary Exponentiation (modular fast power)
+    static long binPow(long a, int b) {
+        long res = 1;
+        while (b > 0) {
+            if ((b & 1) == 1) res = res * a % mod;
+            a = a * a % mod;
+            b >>= 1;
+        }
+        return res;
+    }
+
+
+
+    // ============================================================
+// TREE TEMPLATE
+// ============================================================
+
+
+//    dfs traversal
+//    static int dfs(int node, List<List<Integer>> tree) {
+//
+//        int ans = 0;
+//
+//        for (int child : tree.get(node)) {
+//            ans += dfs(child, tree);
+//        }
+//
+//        return ans;
+//    }
+
+    // 1. Parent Array -> Rooted Tree
+    static List<List<Integer>> buildTree(int n, int[] parent) {
+
+        List<List<Integer>> tree = new ArrayList<>();
+
+        for (int i = 0; i <= n; i++) {
+            tree.add(new ArrayList<>());
+        }
+
+        for (int i = 2; i <= n; i++) {
+            tree.get(parent[i]).add(i);
+        }
+
+        return tree;
+    }
+
+    // 2. Edges -> Undirected Tree
+    static List<List<Integer>> buildUndirectedTree(
+            int n, int[][] edges) {
+
+        List<List<Integer>> tree = new ArrayList<>();
+
+        for (int i = 0; i <= n; i++) {
+            tree.add(new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+
+            int u = edge[0];
+            int v = edge[1];
+
+            tree.get(u).add(v);
+            tree.get(v).add(u);
+        }
+
+        return tree;
+    }
+
+    public static class Pair {
+        public int a, b;
+        Pair(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+        @Override
+        public String toString() {
+            return a + " -> " + b;
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair that = (Pair) o;
+            return a == that.a && b == that.b;
+        }
+    }
+}
+
+class FastReader {
+    BufferedReader br;
+    StringTokenizer st;
+
+    public FastReader() {
+        br = new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    String next() {
+        while (st == null || !st.hasMoreElements()) {
+            try {
+                String line = br.readLine();
+                if (line == null) return null;
+                st = new StringTokenizer(line);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return st.nextToken();
+    }
+
+    int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+    long nextLong() {
+        return Long.parseLong(next());
+    }
+
+    double nextDouble() {
+        return Double.parseDouble(next());
+    }
+
+    String nextLine() {
+        String str = "";
+        try {
+            if (st.hasMoreTokens()) str = st.nextToken("\n");
+            else str = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+}
+
+
+
