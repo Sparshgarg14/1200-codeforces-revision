@@ -1,0 +1,309 @@
+import com.sun.security.jgss.GSSUtil;
+
+import javax.swing.*;
+import java.io.*;
+import java.util.*;
+
+question  -https://codeforces.com/problemset/problem/1937/B
+
+
+//JAI SHREE RAM
+public class Codeforces {
+    public static int mod = 1000000;
+
+    //The problems are easy and if I m not going anywhere with some solution, come back, think again from basic facts and logic
+    //    try to see if the process is good when working in reverse(reverse numbers from 1-n) and think of parity
+    //    even first or odd first to print
+    //    try to make generalized cases - aaaa...bbbb...a a a b bb a ..a.. at the end what I need to do ultimately
+    //    question says to solve a problem given three options , a,b,c , try taking c absent and then think can u do it ?, it makes the problem simpler
+    //    u have to take out the min, think like what min to take out that also takes max with it
+    //    when logic doesn't strike you on what to perform and array given  , try to think in terms of array index
+    //    when they want to have condition as true , try and see what is causing it to be false,(what if all chars>k , whole string is the ans)
+    //    chars are between 1-26 only
+    //    when they want to me appy operations on a binary string to make it sorted , always think in terms of what the
+    //    final stage me look like  - 0000...1111 , here I see boundary created , now where can I create the boundary , loop for it
+
+
+    //The Problem statement
+    /*
+ lexicographically means the smallest string that I can make if I have to travel from 1st square to last square
+  greedy fails , dp works !!! any pattern ?
+
+     */
+
+
+    //Small observations in the question
+    /*
+
+   1101
+   1100
+
+   11000011
+   11111000
+   what if I take the sort the values between 1-n and keep 0th char and
+
+         first character will always be a part of the string and last string as well
+         we have to finalise the characters in between
+         
+         if i had to talk about the number of ways , I can see that there are three cases 
+         one if upper is less then below if I see that is the case , then I cant do down, then I have to again think of posiblities 
+         one if its equal then its maybe possible to take the path from here or below (maybe), 
+         one if its greater , if greater then pointer comes down , no more paths from here possible , its just one single path 
+         from here 
+     */
+
+
+
+    //Algo that can be claimed
+
+
+
+    public static void main(String[] args) throws IOException {
+        FastReader fr = new FastReader();
+        int t = fr.nextInt();
+
+        while (t-- > 0) {
+
+            int n  = fr.nextInt();
+            int[][] arr = new int[2][n];
+            for (int i = 0; i < 2; i++) {
+                String s  = fr.next();
+                for (int j = 0; j < n; j++) {
+                    arr[i][j]  = s.charAt(j)-'0';
+                }
+            }
+            StringBuilder sb   =new StringBuilder();
+            int right=1;
+            int rightdown=0;
+            boolean check =false;
+            sb.append(arr[0][0]);
+            int cnt=1;
+            while(right<n && rightdown< n ){
+//                System.out.println(sb +" " + arr[0][right] + " " + arr[1][rightdown]);
+                if(arr[0][right]<arr[1][rightdown]){
+                    sb.append(arr[0][right]);
+                    rightdown++;
+                    right++;
+                    cnt=1;
+                    continue;
+
+                }
+                if(arr[1][rightdown]<arr[0][right]){
+                    sb.append(arr[1][rightdown]);
+                    rightdown++;
+                    check =true;
+                    right++;
+                    break;
+                }
+                if(arr[0][right]==arr[1][rightdown]){
+                    sb.append(arr[0][right]);
+                    rightdown++;
+                    right++;
+                    cnt++;
+                }
+//                System.out.println(sb + " " + rightdown + " " + right);
+
+
+            }
+            if(check){
+                for(int i = rightdown; i <n ; i++) {
+//                    System.out.println(arr[1][rightdown]);
+                    sb.append(arr[1][i]);
+                }
+            }
+            else sb.append(arr[1][n-1]);
+            System.out.println(sb);
+            System.out.println(cnt);
+
+
+
+        }
+    }
+//   1101
+//   1100
+//
+
+
+
+    public static  int ans=0;
+    public static int dfs(int node , List<List<Integer>>tree){
+        if(tree.get(node).isEmpty()){
+            ans++;
+            return 1;
+        }
+        List<Integer>h  =new ArrayList<>();
+
+        for(int child:tree.get(node)){
+            h.add(dfs(child,tree));
+        }
+        if(h.size()==1){
+            ans++;
+            return h.get(0)+1;
+        }
+        Collections.sort(h);
+        Collections.reverse(h);
+        ans+=h.get(1)+1;
+        return h.get(0)+1;
+
+    }
+
+
+
+
+
+
+
+
+
+    public static void Swap(int i , int j ){
+        int temp=0;
+        i =j;
+
+    }
+    // Function to compute GCD of two numbers
+    public static int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+
+
+
+    //  Binary Exponentiation (modular fast power)
+    static long binPow(long a, int b) {
+        long res = 1;
+        while (b > 0) {
+            if ((b & 1) == 1) res = res * a % mod;
+            a = a * a % mod;
+            b >>= 1;
+        }
+        return res;
+    }
+
+
+
+    // ============================================================
+// TREE TEMPLATE
+// ============================================================
+
+
+//    dfs traversal
+//    static int dfs(int node, List<List<Integer>> tree) {
+//
+//        int ans = 0;
+//
+//        for (int child : tree.get(node)) {
+//            ans += dfs(child, tree);
+//        }
+//
+//        return ans;
+//    }
+
+    // 1. Parent Array -> Rooted Tree
+    static List<List<Integer>> buildTree(int n, int[] parent) {
+
+        List<List<Integer>> tree = new ArrayList<>();
+
+        for (int i = 0; i <= n; i++) {
+            tree.add(new ArrayList<>());
+        }
+
+        for (int i = 2; i <= n; i++) {
+            tree.get(parent[i]).add(i);
+        }
+
+        return tree;
+    }
+
+    // 2. Edges -> Undirected Tree
+    static List<List<Integer>> buildUndirectedTree(
+            int n, int[][] edges) {
+
+        List<List<Integer>> tree = new ArrayList<>();
+
+        for (int i = 0; i <= n; i++) {
+            tree.add(new ArrayList<>());
+        }
+
+        for (int[] edge : edges) {
+
+            int u = edge[0];
+            int v = edge[1];
+
+            tree.get(u).add(v);
+            tree.get(v).add(u);
+        }
+
+        return tree;
+    }
+
+    public static class Pair {
+        public int a, b;
+        Pair(int a, int b) {
+            this.a = a;
+            this.b = b;
+        }
+        @Override
+        public String toString() {
+            return a + " -> " + b;
+        }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair that = (Pair) o;
+            return a == that.a && b == that.b;
+        }
+    }
+}
+
+class FastReader {
+    BufferedReader br;
+    StringTokenizer st;
+
+    public FastReader() {
+        br = new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    String next() {
+        while (st == null || !st.hasMoreElements()) {
+            try {
+                String line = br.readLine();
+                if (line == null) return null;
+                st = new StringTokenizer(line);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return st.nextToken();
+    }
+
+    int nextInt() {
+        return Integer.parseInt(next());
+    }
+
+    long nextLong() {
+        return Long.parseLong(next());
+    }
+
+    double nextDouble() {
+        return Double.parseDouble(next());
+    }
+
+    String nextLine() {
+        String str = "";
+        try {
+            if (st.hasMoreTokens()) str = st.nextToken("\n");
+            else str = br.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
+}
+
+
+
